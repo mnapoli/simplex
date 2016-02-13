@@ -106,7 +106,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Simplex\Exception\EntryNotFound
      * @expectedExceptionMessage Identifier "foo" is not defined.
      */
     public function testOffsetGetValidatesKeyIsPresent()
@@ -436,5 +436,22 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             return "$bar.baz";
         });
         $this->assertSame('bar.baz', $pimple['bar']);
+    }
+
+    public function testGet()
+    {
+        $pimple = new Container();
+        $pimple['param'] = 'value';
+
+        $this->assertEquals('value', $pimple->get('param'));
+    }
+
+    public function testHas()
+    {
+        $pimple = new Container();
+        $pimple['param'] = 'value';
+
+        $this->assertTrue($pimple->has('param'));
+        $this->assertFalse($pimple->has('foo'));
     }
 }

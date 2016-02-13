@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of Pimple.
+ * This file is part of Simplex.
  *
  * Copyright (c) 2009 Fabien Potencier
  *
@@ -26,12 +26,18 @@
 
 namespace Simplex;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\NotFoundException;
+use Simplex\Exception\EntryNotFound;
+
 /**
  * Container main class.
  *
  * @author Fabien Potencier
+ * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
-class Container implements \ArrayAccess
+class Container implements \ArrayAccess, ContainerInterface
 {
     private $values = array();
     private $factories;
@@ -55,6 +61,34 @@ class Container implements \ArrayAccess
         foreach ($values as $key => $value) {
             $this->offsetSet($key, $value);
         }
+    }
+
+    /**
+     * Finds an entry of the container by its identifier and returns it.
+     *
+     * @param string $id Identifier of the entry to look for.
+     *
+     * @throws NotFoundException  No entry was found for this identifier.
+     * @throws ContainerException Error while retrieving the entry.
+     *
+     * @return mixed Entry.
+     */
+    public function get($id)
+    {
+        return $this->offsetGet($id);
+    }
+
+    /**
+     * Returns true if the container can return an entry for the given identifier.
+     * Returns false otherwise.
+     *
+     * @param string $id Identifier of the entry to look for.
+     *
+     * @return boolean
+     */
+    public function has($id)
+    {
+        return $this->offsetExists($id);
     }
 
     /**
@@ -88,12 +122,12 @@ class Container implements \ArrayAccess
      *
      * @return mixed The value of the parameter or an object
      *
-     * @throws \InvalidArgumentException if the identifier is not defined
+     * @throws NotFoundException if the identifier is not defined
      */
     public function offsetGet($id)
     {
         if (!isset($this->keys[$id])) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
+            throw new EntryNotFound($id);
         }
 
         if (
