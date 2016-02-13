@@ -26,29 +26,32 @@
 
 namespace Simplex\Tests\Fixtures;
 
-use Simplex\Container;
-use Simplex\ServiceProviderInterface;
+use Interop\Container\ContainerInterface;
+use Interop\Container\ServiceProvider\ServiceProvider;
 
-class SimplexServiceProvider implements ServiceProviderInterface
+class SimplexServiceProvider implements ServiceProvider
 {
-    /**
-     * Registers services on the given container.
-     *
-     * This method should only be used to configure services and parameters.
-     * It should not get services.
-     *
-     * @param Container $pimple An Container instance
-     */
-    public function register(Container $pimple)
+    public static function getServices()
     {
-        $pimple['param'] = 'value';
+        return array(
+            'param' => 'getParam',
+            'service' => 'getService',
+            'previous' => 'getPrevious',
+        );
+    }
 
-        $pimple['service'] = function () {
-            return new Service();
-        };
+    public static function getParam()
+    {
+        return 'value';
+    }
 
-        $pimple['factory'] = $pimple->factory(function () {
-            return new Service();
-        });
+    public static function getService()
+    {
+        return new Service();
+    }
+
+    public static function getPrevious(ContainerInterface $container, $previous = null)
+    {
+        return $previous;
     }
 }

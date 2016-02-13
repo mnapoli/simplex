@@ -255,16 +255,12 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @return callable The wrapped callable
      *
-     * @throws \InvalidArgumentException if the identifier is not defined or not a service definition
+     * @throws \InvalidArgumentException if not a service definition
      */
     public function extend($id, $callable)
     {
         if (!isset($this->keys[$id])) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
-        }
-
-        if (!is_object($this->values[$id]) || !method_exists($this->values[$id], '__invoke')) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" does not contain an object definition.', $id));
+            $this->offsetSet($id, null);
         }
 
         if (!is_object($callable) || !method_exists($callable, '__invoke')) {
@@ -274,10 +270,11 @@ class Container implements \ArrayAccess, ContainerInterface
         $factory = $this->values[$id];
 
         $extended = function ($c) use ($callable, $factory) {
-            return $callable($factory($c), $c);
+            $previous = is_callable($factory) ? $factory($c) : $factory;
+            return $callable($previous, $c);
         };
 
-        if (isset($this->factories[$factory])) {
+        if (is_object($factory) && isset($this->factories[$factory])) {
             $this->factories->detach($factory);
             $this->factories->attach($extended);
         }
@@ -298,14 +295,22 @@ class Container implements \ArrayAccess, ContainerInterface
     /**
      * Registers a service provider.
      *
-     * @param ServiceProviderInterface $provider A ServiceProviderInterface instance
-     * @param array                    $values   An array of values that customizes the provider
+     * @param string $provider Name of a class implementing the ServiceProvider interface
+     * @param array $values An array of values that customizes the provider
      *
      * @return static
      */
-    public function register(ServiceProviderInterface $provider, array $values = array())
+    public function register($provider, array $values = array())
     {
-        $provider->register($this);
+        $entries = call_user_func(array($provider, 'getServices'));
+
+        foreach ($entries as $key => $method) {
+            $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($provider, $method) {
+                $callable = array($provider, $method);
+                $parameters = array($c, $previous);
+                return call_user_func_array($callable, $parameters);
+            });
+        }
 
         foreach ($values as $key => $value) {
             $this[$key] = $value;

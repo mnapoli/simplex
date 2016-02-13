@@ -187,7 +187,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testFluentRegister()
     {
         $pimple = new Container();
-        $this->assertSame($pimple, $pimple->register($this->getMock('Simplex\ServiceProviderInterface')));
+        $this->assertSame($pimple, $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider'));
     }
 
     /**
@@ -250,14 +250,13 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $p->getValue($pimple));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Identifier "foo" is not defined.
-     */
-    public function testExtendValidatesKeyIsPresent()
+    public function testExtendAllowsExtendingUnknownEntry()
     {
         $pimple = new Container();
-        $pimple->extend('foo', function () {});
+        $pimple->extend('foo', function ($previous) {
+            return $previous;
+        });
+        $this->assertNull($pimple['foo']);
     }
 
     public function testKeys()
@@ -311,14 +310,15 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider badServiceDefinitionProvider
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Identifier "foo" does not contain an object definition.
      */
-    public function testExtendFailsForKeysNotContainingServiceDefinitions($service)
+    public function testExtendNonInvokableDefinition($service)
     {
         $pimple = new Container();
         $pimple['foo'] = $service;
-        $pimple->extend('foo', function () {});
+        $pimple->extend('foo', function ($previous) {
+            return $previous;
+        });
+        $this->assertSame($service, $pimple['foo']);
     }
 
     /**
