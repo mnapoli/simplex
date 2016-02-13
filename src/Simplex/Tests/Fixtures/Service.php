@@ -24,11 +24,12 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple\Tests\Fixtures;
+namespace Simplex\Tests\Fixtures;
 
-class NonInvokable
+/**
+ * @author  Igor Wiedler <igor@wiedler.ch>
+ */
+class Service
 {
-    public function __call($a, $b)
-    {
-    }
+    public $value;
 }

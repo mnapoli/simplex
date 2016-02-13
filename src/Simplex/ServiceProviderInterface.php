@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple;
+namespace Simplex;
 
 /**
  * Pimple service provider interface.

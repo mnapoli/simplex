@@ -24,12 +24,12 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple\Tests\Fixtures;
+namespace Simplex\Tests\Fixtures;
 
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use Simplex\Container;
+use Simplex\ServiceProviderInterface;
 
-class PimpleServiceProvider implements ServiceProviderInterface
+class SimplexServiceProvider implements ServiceProviderInterface
 {
     /**
      * Registers services on the given container.

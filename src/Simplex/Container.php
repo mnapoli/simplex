@@ -24,12 +24,12 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple;
+namespace Simplex;
 
 /**
  * Container main class.
  *
- * @author  Fabien Potencier
+ * @author Fabien Potencier
  */
 class Container implements \ArrayAccess
 {

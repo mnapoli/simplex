@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of Pimple.
+ * This file is part of Simplex.
  *
  * Copyright (c) 2009 Fabien Potencier
  *
@@ -24,14 +24,14 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple\Tests;
+namespace Simplex\Tests;
 
-use Pimple\Container;
+use Simplex\Container;
 
 /**
  * @author  Igor Wiedler <igor@wiedler.ch>
  */
-class PimpleTest extends \PHPUnit_Framework_TestCase
+class ContainerTest extends \PHPUnit_Framework_TestCase
 {
     public function testWithString()
     {
@@ -48,7 +48,7 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
             return new Fixtures\Service();
         };
 
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $pimple['service']);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['service']);
     }
 
     public function testServicesShouldBeDifferent()
@@ -59,10 +59,10 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
         });
 
         $serviceOne = $pimple['service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceOne);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceOne);
 
         $serviceTwo = $pimple['service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceTwo);
 
         $this->assertNotSame($serviceOne, $serviceTwo);
     }
@@ -144,10 +144,10 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
         $pimple['shared_service'] = $service;
 
         $serviceOne = $pimple['shared_service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceOne);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceOne);
 
         $serviceTwo = $pimple['shared_service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceTwo);
 
         $this->assertSame($serviceOne, $serviceTwo);
     }
@@ -187,7 +187,7 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
     public function testFluentRegister()
     {
         $pimple = new Container();
-        $this->assertSame($pimple, $pimple->register($this->getMock('Pimple\ServiceProviderInterface')));
+        $this->assertSame($pimple, $pimple->register($this->getMock('Simplex\ServiceProviderInterface')));
     }
 
     /**
@@ -215,17 +215,17 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
 
         $pimple->extend('shared_service', $service);
         $serviceOne = $pimple['shared_service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceOne);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceOne);
         $serviceTwo = $pimple['shared_service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceTwo);
         $this->assertSame($serviceOne, $serviceTwo);
         $this->assertSame($serviceOne->value, $serviceTwo->value);
 
         $pimple->extend('factory_service', $service);
         $serviceOne = $pimple['factory_service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceOne);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceOne);
         $serviceTwo = $pimple['factory_service'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceTwo);
         $this->assertNotSame($serviceOne, $serviceTwo);
         $this->assertNotSame($serviceOne->value, $serviceTwo->value);
     }
@@ -233,7 +233,7 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
     public function testExtendDoesNotLeakWithFactories()
     {
         if (extension_loaded('pimple')) {
-            $this->markTestSkipped('Pimple extension does not support this test');
+            $this->markTestSkipped('Simplex extension does not support this test');
         }
         $pimple = new Container();
 
@@ -275,7 +275,7 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
         $pimple = new Container();
         $pimple['invokable'] = new Fixtures\Invokable();
 
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $pimple['invokable']);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['invokable']);
     }
 
     /** @test */
@@ -284,7 +284,7 @@ class PimpleTest extends \PHPUnit_Framework_TestCase
         $pimple = new Container();
         $pimple['non_invokable'] = new Fixtures\NonInvokable();
 
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\NonInvokable', $pimple['non_invokable']);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\NonInvokable', $pimple['non_invokable']);
     }
 
     /**

@@ -24,15 +24,11 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple\Tests\Fixtures;
+namespace Simplex\Tests\Fixtures;
 
-class Invokable
+class NonInvokable
 {
-    public function __invoke($value = null)
+    public function __call($a, $b)
     {
-        $service = new Service();
-        $service->value = $value;
-
-        return $service;
     }
 }

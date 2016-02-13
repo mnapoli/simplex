@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of Pimple.
+ * This file is part of Simplex.
  *
  * Copyright (c) 2009 Fabien Potencier
  *
@@ -24,30 +24,30 @@
  * THE SOFTWARE.
  */
 
-namespace Pimple\Tests;
+namespace Simplex\Tests;
 
-use Pimple\Container;
+use Simplex\Container;
 
 /**
  * @author  Dominik Zogg <dominik.zogg@gmail.com>
  */
-class PimpleServiceProviderInterfaceTest extends \PHPUnit_Framework_TestCase
+class SimplexServiceProviderInterfaceTest extends \PHPUnit_Framework_TestCase
 {
     public function testProvider()
     {
         $pimple = new Container();
 
-        $pimpleServiceProvider = new Fixtures\PimpleServiceProvider();
+        $pimpleServiceProvider = new Fixtures\SimplexServiceProvider();
         $pimpleServiceProvider->register($pimple);
 
         $this->assertEquals('value', $pimple['param']);
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $pimple['service']);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['service']);
 
         $serviceOne = $pimple['factory'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceOne);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceOne);
 
         $serviceTwo = $pimple['factory'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceTwo);
 
         $this->assertNotSame($serviceOne, $serviceTwo);
     }
@@ -56,20 +56,20 @@ class PimpleServiceProviderInterfaceTest extends \PHPUnit_Framework_TestCase
     {
         $pimple = new Container();
 
-        $pimple->register(new Fixtures\PimpleServiceProvider(), array(
+        $pimple->register(new Fixtures\SimplexServiceProvider(), array(
             'anotherParameter' => 'anotherValue',
         ));
 
         $this->assertEquals('value', $pimple['param']);
         $this->assertEquals('anotherValue', $pimple['anotherParameter']);
 
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $pimple['service']);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['service']);
 
         $serviceOne = $pimple['factory'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceOne);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceOne);
 
         $serviceTwo = $pimple['factory'];
-        $this->assertInstanceOf('Pimple\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $serviceTwo);
 
         $this->assertNotSame($serviceOne, $serviceTwo);
     }

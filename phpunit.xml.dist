@@ -8,7 +8,7 @@
 >
     <testsuites>
         <testsuite name="Pimple Test Suite">
-            <directory>./src/Pimple/Tests</directory>
+            <directory>./src/Simplex/Tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
