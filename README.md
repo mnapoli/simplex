@@ -4,7 +4,7 @@ Simplex is a [Pimple](https://github.com/silexphp/Pimple) fork with full [contai
 
 Simplex is a small dependency injection container for PHP.
 
-# Differences with Pimple
+## Differences with Pimple
 
 Simplex is a fork of Pimple's code. The only differences are the following:
 
