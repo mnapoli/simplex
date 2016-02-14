@@ -4,6 +4,18 @@ Simplex is a [Pimple](https://github.com/silexphp/Pimple) fork with full [contai
 
 Simplex is a small dependency injection container for PHP.
 
+# Differences with Pimple
+
+Simplex is a fork of Pimple's code. The only differences are the following:
+
+- `Simplex\Container` implements [`ContainerInterface`](https://github.com/container-interop/container-interop/blob/master/src/Interop/Container/ContainerInterface.php), which means the following methods exist:
+    - `$container->get($id)` which is an alias to `$container[$id]`
+    - `$container->has($id)` which is an alias to `isset($container[$id])`
+- service providers have been completely replaced by [container-interop's service providers](https://github.com/container-interop/service-provider): that allows to load cross-framework modules in this container
+- it is possible to extend a previously non-existing entry with `$container->extend()` (for compatibility reasons with cross-framework service providers)
+
+Below is the documentation of Pimple/Simplex.
+
 # Installation
 
 ```
