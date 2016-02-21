@@ -1,5 +1,8 @@
 {
     "name": "mnapoli/simplex",
+    "description": "Pimple fork with full container-interop support",
+    "keywords": ["dependency injection", "container"],
+    "homepage": "https://github.com/mnapoli/simplex",
     "type": "library",
     "license": "MIT",
     "authors": [
