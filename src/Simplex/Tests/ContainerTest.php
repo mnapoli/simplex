@@ -454,4 +454,16 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($pimple->has('param'));
         $this->assertFalse($pimple->has('foo'));
     }
+
+    public function testDelegateLookupFeature()
+    {
+        $root = new Container();
+        $container = new Container(array(), $root);
+
+        $container['self'] = function ($c) {
+            return $c;
+        };
+
+        $this->assertSame($root, $container['self']);
+    }
 }

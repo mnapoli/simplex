@@ -47,14 +47,24 @@ class Container implements \ArrayAccess, ContainerInterface
     private $keys = array();
 
     /**
+     * Container from which to fetch dependencies.
+     * @see https://github.com/container-interop/container-interop/blob/master/docs/Delegate-lookup.md
+     * @var ContainerInterface
+     */
+    private $rootContainer;
+
+    /**
      * Instantiate the container.
      *
      * Objects and parameters can be passed as argument to the constructor.
      *
      * @param array $values The parameters or objects.
+     * @param ContainerInterface $rootContainer Container from which to fetch dependencies. If null, this container
+     *                                          will be considered the root container.
      */
-    public function __construct(array $values = array())
+    public function __construct(array $values = array(), ContainerInterface $rootContainer = null)
     {
+        $this->rootContainer = $rootContainer ?: $this;
         $this->factories = new \SplObjectStorage();
         $this->protected = new \SplObjectStorage();
 
@@ -144,7 +154,7 @@ class Container implements \ArrayAccess, ContainerInterface
         }
 
         $raw = $this->values[$id];
-        $val = $this->values[$id] = $raw($this);
+        $val = $this->values[$id] = $raw($this->rootContainer);
         $this->raw[$id] = $raw;
 
         $this->frozen[$id] = true;
