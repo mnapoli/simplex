@@ -50,8 +50,8 @@ class SimplexServiceProvider implements ServiceProvider
         return new Service();
     }
 
-    public static function getPrevious(ContainerInterface $container, $previous = null)
+    public static function getPrevious(ContainerInterface $container, callable $getPrevious = null)
     {
-        return $previous;
+        return $getPrevious;
     }
 }

@@ -315,11 +315,21 @@ class Container implements \ArrayAccess, ContainerInterface
         $entries = call_user_func(array($provider, 'getServices'));
 
         foreach ($entries as $key => $method) {
-            $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($provider, $method) {
-                $callable = array($provider, $method);
-                $parameters = array($c, $previous);
-                return call_user_func_array($callable, $parameters);
-            });
+            $callable = array($provider, $method);
+
+            if (isset($this->keys[$key])) {
+                // Extend a previous entry
+                $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($callable) {
+                    $getPrevious = function () use ($previous) {
+                        return $previous;
+                    };
+                    return call_user_func($callable, $c, $getPrevious);
+                });
+            } else {
+                $this[$key] = function (ContainerInterface $c) use ($callable) {
+                    return call_user_func($callable, $c, null);
+                };
+            }
         }
 
         foreach ($values as $key => $value) {

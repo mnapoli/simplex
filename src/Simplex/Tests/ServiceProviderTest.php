@@ -63,7 +63,8 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $pimple = new Container();
         $pimple['previous'] = 'foo';
         $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider');
-        $this->assertEquals('foo', $pimple['previous']);
+        $getPrevious = $pimple['previous'];
+        $this->assertEquals('foo', $getPrevious());
     }
 
     public function testExtendingNothing()
