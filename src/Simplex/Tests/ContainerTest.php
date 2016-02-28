@@ -250,13 +250,24 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $p->getValue($pimple));
     }
 
-    public function testExtendAllowsExtendingUnknownEntry()
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Identifier "foo" is not defined.
+     */
+    public function testExtendValidatesKeyIsPresent()
     {
         $pimple = new Container();
+        $pimple->extend('foo', function () {});
+    }
+
+    public function testExtendAllowsExtendingScalar()
+    {
+        $pimple = new Container();
+        $pimple['foo'] = 'bar';
         $pimple->extend('foo', function ($previous) {
-            return $previous;
+            return $previous . 'bar';
         });
-        $this->assertNull($pimple['foo']);
+        $this->assertEquals('barbar', $pimple['foo']);
     }
 
     public function testKeys()

@@ -13,7 +13,7 @@ Simplex is a fork of Pimple's code. The only differences are the following:
     - `$container->has($id)` which is an alias to `isset($container[$id])`
 - the constructor takes an optional `ContainerInterface $rootContainer = null` argument to support the [delegate lookup feature](https://github.com/container-interop/container-interop/blob/master/docs/Delegate-lookup.md): if provided, this container will be injected in factories instead
 - service providers have been completely replaced by [container-interop's service providers](https://github.com/container-interop/service-provider): that allows to load cross-framework modules in this container
-- it is possible to extend a previously non-existing entry with `$container->extend()` (for compatibility reasons with cross-framework service providers)
+- it is possible to extend a scalar value with `$container->extend()` (for compatibility reasons with cross-framework service providers)
 
 Below is the documentation of Pimple/Simplex.
 

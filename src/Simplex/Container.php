@@ -265,12 +265,12 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @return callable The wrapped callable
      *
-     * @throws \InvalidArgumentException if not a service definition
+     * @throws \InvalidArgumentException if the identifier is not defined or not a service definition
      */
     public function extend($id, $callable)
     {
         if (!isset($this->keys[$id])) {
-            $this->offsetSet($id, null);
+            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
         if (!is_object($callable) || !method_exists($callable, '__invoke')) {
