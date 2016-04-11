@@ -314,8 +314,7 @@ class Container implements \ArrayAccess, ContainerInterface
     {
         $entries = call_user_func(array($provider, 'getServices'));
 
-        foreach ($entries as $key => $method) {
-            $callable = array($provider, $method);
+        foreach ($entries as $key => $callable) {
 
             if (isset($this->keys[$key])) {
                 // Extend a previous entry

@@ -34,20 +34,17 @@ class SimplexServiceProvider implements ServiceProvider
     public static function getServices()
     {
         return array(
-            'param' => 'getParam',
-            'service' => 'getService',
-            'previous' => 'getPrevious',
+            'param' => [SimplexServiceProvider::class, 'getParam'],
+            'service' => function() {
+                return new Service();
+            },
+            'previous' => [SimplexServiceProvider::class, 'getPrevious'],
         );
     }
 
     public static function getParam()
     {
         return 'value';
-    }
-
-    public static function getService()
-    {
-        return new Service();
     }
 
     public static function getPrevious(ContainerInterface $container, callable $getPrevious = null)
