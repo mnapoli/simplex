@@ -29,6 +29,7 @@ namespace Simplex;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Interop\Container\Exception\NotFoundException;
+use Interop\Container\ServiceProvider;
 use Simplex\Exception\EntryNotFound;
 
 /**
@@ -305,14 +306,14 @@ class Container implements \ArrayAccess, ContainerInterface
     /**
      * Registers a service provider.
      *
-     * @param string $provider Name of a class implementing the ServiceProvider interface
+     * @param ServiceProvider $provider the service provider to register
      * @param array $values An array of values that customizes the provider
      *
      * @return static
      */
-    public function register($provider, array $values = array())
+    public function register(ServiceProvider $provider, array $values = array())
     {
-        $entries = call_user_func(array($provider, 'getServices'));
+        $entries = $provider->getServices();
 
         foreach ($entries as $key => $callable) {
 

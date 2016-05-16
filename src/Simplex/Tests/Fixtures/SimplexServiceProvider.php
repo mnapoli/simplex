@@ -6,7 +6,7 @@ use Interop\Container\ServiceProvider;
 
 class SimplexServiceProvider implements ServiceProvider
 {
-    public static function getServices()
+    public function getServices()
     {
         return array(
             'param' => array(SimplexServiceProvider::class, 'getParam'),
