@@ -27,6 +27,7 @@
 namespace Simplex\Tests;
 
 use Simplex\Container;
+use Simplex\Tests\Fixtures\SimplexServiceProvider;
 
 /**
  * @author  Igor Wiedler <igor@wiedler.ch>
@@ -187,7 +188,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testFluentRegister()
     {
         $pimple = new Container();
-        $this->assertSame($pimple, $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider'));
+        $this->assertSame($pimple, $pimple->register(new SimplexServiceProvider()));
     }
 
     /**

@@ -27,6 +27,7 @@
 namespace Simplex\Tests;
 
 use Simplex\Container;
+use Simplex\Tests\Fixtures\SimplexServiceProvider;
 
 /**
  * @author Dominik Zogg <dominik.zogg@gmail.com>
@@ -38,7 +39,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $pimple = new Container();
 
-        $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider');
+        $pimple->register(new SimplexServiceProvider());
 
         $this->assertEquals('value', $pimple['param']);
         $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['service']);
@@ -48,7 +49,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $pimple = new Container();
 
-        $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider', array(
+        $pimple->register(new SimplexServiceProvider(), array(
             'anotherParameter' => 'anotherValue',
         ));
 
@@ -62,7 +63,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $pimple = new Container();
         $pimple['previous'] = 'foo';
-        $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider');
+        $pimple->register(new SimplexServiceProvider());
         $getPrevious = $pimple['previous'];
         $this->assertEquals('foo', $getPrevious());
     }
@@ -70,7 +71,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testExtendingNothing()
     {
         $pimple = new Container();
-        $pimple->register('Simplex\Tests\Fixtures\SimplexServiceProvider');
+        $pimple->register(new SimplexServiceProvider());
         $this->assertNull($pimple['previous']);
     }
 }
