@@ -478,4 +478,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($root, $container['self']);
     }
+
+    public function testSet()
+    {
+        $pimple = new Container();
+        $pimple->set('param', 'value');
+
+        $this->assertEquals('value', $pimple['param']);
+    }
 }

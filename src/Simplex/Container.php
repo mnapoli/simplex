@@ -116,6 +116,25 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @throws \RuntimeException Prevent override of a frozen service
      */
+    public function set($id, $value)
+    {
+        $this->offsetSet($id, $value);
+    }
+
+    /**
+     * Sets a parameter or an object.
+     *
+     * Objects must be defined as Closures.
+     *
+     * Allowing any PHP callable leads to difficult to debug problems
+     * as function names (strings) are callable (creating a function with
+     * the same name as an existing parameter would break your container).
+     *
+     * @param string $id    The unique identifier for the parameter or object
+     * @param mixed  $value The value of the parameter or a closure to define an object
+     *
+     * @throws \RuntimeException Prevent override of a frozen service
+     */
     public function offsetSet($id, $value)
     {
         if (isset($this->frozen[$id])) {
