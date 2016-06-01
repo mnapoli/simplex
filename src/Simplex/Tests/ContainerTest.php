@@ -486,13 +486,4 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('value', $pimple['param']);
     }
-
-    public function testDelete()
-    {
-        $pimple = new Container();
-        $pimple['param'] = 'value';
-
-        $pimple->delete('param');
-        $this->assertFalse(isset($pimple['param']));
-    }
 }

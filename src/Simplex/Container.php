@@ -122,16 +122,6 @@ class Container implements \ArrayAccess, ContainerInterface
     }
 
     /**
-     * Unsets a parameter or an object.
-     *
-     * @param string $id The unique identifier for the parameter or object
-     */
-    public function delete($id)
-    {
-        $this->offsetUnset($id);
-    }
-
-    /**
      * Sets a parameter or an object.
      *
      * Objects must be defined as Closures.
