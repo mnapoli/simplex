@@ -300,7 +300,10 @@ class Container implements \ArrayAccess, ContainerInterface
         $factory = $this->values[$id];
 
         $extended = function ($c) use ($callable, $factory) {
-            $previous = is_callable($factory) ? $factory($c) : $factory;
+            $previous = is_callable($factory)
+                ? function () use ($c, $factory) { return $factory($c); }
+                : $factory;
+
             return $callable($previous, $c);
         };
 
@@ -339,8 +342,8 @@ class Container implements \ArrayAccess, ContainerInterface
             if (isset($this->keys[$key])) {
                 // Extend a previous entry
                 $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($callable) {
-                    $getPrevious = function () use ($previous) {
-                        return $previous;
+                    $getPrevious = function () use ($c, $previous) {
+                        return is_callable($previous) ? $previous($c) : $previous;
                     };
                     return call_user_func($callable, $c, $getPrevious);
                 });
