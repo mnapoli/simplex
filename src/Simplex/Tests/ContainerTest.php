@@ -425,10 +425,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             return 'foo';
         };
         $pimple['foo'] = $pimple->extend('foo', function ($foo, $app) {
-            return "$foo.bar";
+            return $foo() . ".bar";
         });
         $pimple['foo'] = $pimple->extend('foo', function ($foo, $app) {
-            return "$foo.baz";
+            return $foo() . ".baz";
         });
         $this->assertSame('foo.bar.baz', $pimple['foo']);
     }
@@ -445,7 +445,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $foo = $pimple['foo'];
 
         $pimple['bar'] = $pimple->extend('bar', function ($bar, $app) {
-            return "$bar.baz";
+            return $bar() . ".baz";
         });
         $this->assertSame('bar.baz', $pimple['bar']);
     }
