@@ -280,14 +280,60 @@ class Container implements \ArrayAccess, ContainerInterface
      * Useful when you want to extend an existing object definition,
      * without necessarily loading that object.
      *
-     * @param string   $id       The unique identifier for the object
-     * @param callable $callable A service definition to extend the original
+     * @param string   $id                  The unique identifier for the object
+     * @param callable $callable            A service definition to extend the original
      *
      * @return callable The wrapped callable
      *
      * @throws \InvalidArgumentException if the identifier is not defined or not a service definition
      */
     public function extend($id, $callable)
+    {
+        return $this->extendWithCallable($id, $callable, function ($c, $factory) {
+
+            return is_callable($factory) ? $factory($c) : $factory;
+
+        });
+    }
+
+    /**
+     * Extends a service provider definition.
+     *
+     * Allow to not produce the previous value until $getPrevious() is actually
+     * called.
+     *
+     * @param string   $id                  The unique identifier for the object
+     * @param callable $callable            A service definition to extend the original
+     *
+     * @return callable The wrapped callable
+     *
+     * @throws \InvalidArgumentException if the identifier is not defined or not a service definition
+     */
+    private function extendServiceProviderDefinition($id, $callable)
+    {
+        return $this->extendWithCallable($id, $callable, function ($c, $factory) {
+
+            return function () use ($c, $factory) {
+
+                return is_callable($factory) ? $factory($c) : $factory;
+
+            };
+
+        });
+    }
+
+    /**
+     * Allows to have different behaviour when using standard extend method and
+     * when extending service provider definitions.
+     *
+     * @param string   $id                  The unique identifier for the object
+     * @param callable $callable            A service definition to extend the original
+     *
+     * @return callable The wrapped callable
+     *
+     * @throws \InvalidArgumentException if the identifier is not defined or not a service definition
+     */
+    private function extendWithCallable($id, $callable, $getPreviousValue)
     {
         if (!isset($this->keys[$id])) {
             throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
@@ -299,8 +345,8 @@ class Container implements \ArrayAccess, ContainerInterface
 
         $factory = $this->values[$id];
 
-        $extended = function ($c) use ($callable, $factory) {
-            $previous = is_callable($factory) ? $factory($c) : $factory;
+        $extended = function ($c) use ($callable, $factory, $getPreviousValue) {
+            $previous = $getPreviousValue($c, $factory);
             return $callable($previous, $c);
         };
 
@@ -338,10 +384,7 @@ class Container implements \ArrayAccess, ContainerInterface
 
             if (isset($this->keys[$key])) {
                 // Extend a previous entry
-                $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($callable) {
-                    $getPrevious = function () use ($previous) {
-                        return $previous;
-                    };
+                $this[$key] = $this->extendServiceProviderDefinition($key, function ($getPrevious, ContainerInterface $c) use ($callable) {
                     return call_user_func($callable, $c, $getPrevious);
                 });
             } else {
