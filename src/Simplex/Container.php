@@ -29,7 +29,7 @@ namespace Simplex;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Interop\Container\Exception\NotFoundException;
-use Interop\Container\ServiceProvider;
+use Interop\Container\ServiceProviderInterface;
 use Simplex\Exception\EntryNotFound;
 
 /**
@@ -325,24 +325,29 @@ class Container implements \ArrayAccess, ContainerInterface
     /**
      * Registers a service provider.
      *
-     * @param ServiceProvider $provider the service provider to register
+     * @param ServiceProviderInterface $provider the service provider to register
      * @param array $values An array of values that customizes the provider
      *
      * @return static
      */
-    public function register(ServiceProvider $provider, array $values = array())
+    public function register(ServiceProviderInterface $provider, array $values = array())
     {
-        $entries = $provider->getServices();
+        $factories = $provider->getFactories();
 
-        foreach ($entries as $key => $callable) {
+        foreach ($factories as $key => $callable) {
+            $this[$key] = function (ContainerInterface $c) use ($callable) {
+                return call_user_func($callable, $c);
+            };
+        }
+
+        $extensions = $provider->getExtensions();
+
+        foreach ($extensions as $key => $callable) {
 
             if (isset($this->keys[$key])) {
                 // Extend a previous entry
                 $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($callable) {
-                    $getPrevious = function () use ($previous) {
-                        return $previous;
-                    };
-                    return call_user_func($callable, $c, $getPrevious);
+                    return call_user_func($callable, $c, $previous);
                 });
             } else {
                 $this[$key] = function (ContainerInterface $c) use ($callable) {

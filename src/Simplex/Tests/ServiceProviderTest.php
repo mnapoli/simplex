@@ -64,14 +64,14 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $pimple = new Container();
         $pimple['previous'] = 'foo';
         $pimple->register(new SimplexServiceProvider());
-        $getPrevious = $pimple['previous'];
-        $this->assertEquals('foo', $getPrevious());
+        $previous = $pimple['previous'];
+        $this->assertEquals('foofoo', $previous);
     }
 
     public function testExtendingNothing()
     {
         $pimple = new Container();
         $pimple->register(new SimplexServiceProvider());
-        $this->assertNull($pimple['previous']);
+        $this->assertSame('', $pimple['previous']);
     }
 }
