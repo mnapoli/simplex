@@ -28,6 +28,8 @@ namespace Simplex\Tests;
 
 use Simplex\Container;
 use Simplex\Tests\Fixtures\SimplexServiceProvider;
+use Simplex\Tests\Fixtures\SimplexServiceProviderWithExtension;
+use Simplex\Tests\Fixtures\SimplexServiceProviderWithFactory;
 
 /**
  * @author Dominik Zogg <dominik.zogg@gmail.com>
@@ -73,5 +75,14 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $pimple = new Container();
         $pimple->register(new SimplexServiceProvider());
         $this->assertSame('', $pimple['previous']);
+    }
+
+    public function testRegisterExtensionBeforeFactory()
+    {
+        $pimple = new Container();
+
+        $pimple->register(new SimplexServiceProviderWithExtension());
+        $pimple->register(new SimplexServiceProviderWithFactory());
+        $this->assertSame('abcdef', $pimple->get('test'));
     }
 }
