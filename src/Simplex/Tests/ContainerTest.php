@@ -101,7 +101,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testConstructorInjection()
     {
         $params = array('param' => 'value');
-        $pimple = new Container($params);
+        $pimple = new Container(array(), $params);
 
         $this->assertSame($params['param'], $pimple['param']);
     }
@@ -183,12 +183,6 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $pimple = new Container();
         $pimple['foo'] = null;
         $this->assertNull($pimple->raw('foo'));
-    }
-
-    public function testFluentRegister()
-    {
-        $pimple = new Container();
-        $this->assertSame($pimple, $pimple->register(new SimplexServiceProvider()));
     }
 
     /**
@@ -470,7 +464,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testDelegateLookupFeature()
     {
         $root = new Container();
-        $container = new Container(array(), $root);
+        $container = new Container(array(), array(), $root);
 
         $container['self'] = function ($c) {
             return $c;

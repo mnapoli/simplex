@@ -59,19 +59,18 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * Objects and parameters can be passed as argument to the constructor.
      *
+     * @param array $providers The service providers to register.
      * @param array $values The parameters or objects.
      * @param ContainerInterface $rootContainer Container from which to fetch dependencies. If null, this container
      *                                          will be considered the root container.
      */
-    public function __construct(array $values = array(), ContainerInterface $rootContainer = null)
+    public function __construct(array $providers = array(), array $values = array(), ContainerInterface $rootContainer = null)
     {
         $this->rootContainer = $rootContainer ?: $this;
         $this->factories = new \SplObjectStorage();
         $this->protected = new \SplObjectStorage();
 
-        foreach ($values as $key => $value) {
-            $this->offsetSet($key, $value);
-        }
+        $this->register($providers, $values);
     }
 
     /**
@@ -323,43 +322,49 @@ class Container implements \ArrayAccess, ContainerInterface
     }
 
     /**
-     * Registers a service provider.
+     * Registers service providers.
      *
-     * @param ServiceProviderInterface $provider the service provider to register
-     * @param array $values An array of values that customizes the provider
+     * @param array $providers the list of service providers to register
+     * @param array $values An array of values that customizes the providers
      *
-     * @return static
+     * @return void
      */
-    public function register(ServiceProviderInterface $provider, array $values = array())
+    private function register(array $providers, array $values)
     {
-        $factories = $provider->getFactories();
+        foreach ($providers as $provider) {
 
-        foreach ($factories as $key => $callable) {
-            $this[$key] = function (ContainerInterface $c) use ($callable) {
-                return call_user_func($callable, $c);
-            };
-        }
+            $factories = $provider->getFactories();
 
-        $extensions = $provider->getExtensions();
-
-        foreach ($extensions as $key => $callable) {
-
-            if (isset($this->keys[$key])) {
-                // Extend a previous entry
-                $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($callable) {
-                    return call_user_func($callable, $c, $previous);
-                });
-            } else {
+            foreach ($factories as $key => $callable) {
                 $this[$key] = function (ContainerInterface $c) use ($callable) {
-                    return call_user_func($callable, $c, null);
+                    return call_user_func($callable, $c);
                 };
             }
+
+        }
+
+        foreach ($providers as $provider) {
+
+            $extensions = $provider->getExtensions();
+
+            foreach ($extensions as $key => $callable) {
+
+                if (isset($this->keys[$key])) {
+                    // Extend a previous entry
+                    $this[$key] = $this->extend($key, function ($previous, ContainerInterface $c) use ($callable) {
+                        return call_user_func($callable, $c, $previous);
+                    });
+                } else {
+                    $this[$key] = function (ContainerInterface $c) use ($callable) {
+                        return call_user_func($callable, $c, null);
+                    };
+                }
+            }
+
         }
 
         foreach ($values as $key => $value) {
             $this[$key] = $value;
         }
-
-        return $this;
     }
 }

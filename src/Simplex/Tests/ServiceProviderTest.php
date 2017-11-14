@@ -28,6 +28,8 @@ namespace Simplex\Tests;
 
 use Simplex\Container;
 use Simplex\Tests\Fixtures\SimplexServiceProvider;
+use Simplex\Tests\Fixtures\SimplexServiceProviderWithExtension;
+use Simplex\Tests\Fixtures\SimplexServiceProviderWithFactory;
 
 /**
  * @author Dominik Zogg <dominik.zogg@gmail.com>
@@ -37,19 +39,15 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testProvider()
     {
-        $pimple = new Container();
-
-        $pimple->register(new SimplexServiceProvider());
+        $pimple = new Container(array(new SimplexServiceProvider()));
 
         $this->assertEquals('value', $pimple['param']);
         $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['service']);
     }
 
-    public function testProviderWithRegisterMethod()
+    public function testProviderWithCustomizedValues()
     {
-        $pimple = new Container();
-
-        $pimple->register(new SimplexServiceProvider(), array(
+        $pimple = new Container(array(new SimplexServiceProvider()), array(
             'anotherParameter' => 'anotherValue',
         ));
 
@@ -59,19 +57,20 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Simplex\Tests\Fixtures\Service', $pimple['service']);
     }
 
-    public function testExtendingValue()
-    {
-        $pimple = new Container();
-        $pimple['previous'] = 'foo';
-        $pimple->register(new SimplexServiceProvider());
-        $previous = $pimple['previous'];
-        $this->assertEquals('foofoo', $previous);
-    }
-
     public function testExtendingNothing()
     {
-        $pimple = new Container();
-        $pimple->register(new SimplexServiceProvider());
+        $pimple = new Container(array(new SimplexServiceProvider()));
+
         $this->assertSame('', $pimple['previous']);
+    }
+
+    public function testRegisterExtensionBeforeFactory()
+    {
+        $pimple = new Container(array(
+            new SimplexServiceProviderWithExtension(),
+            new SimplexServiceProviderWithFactory()
+        ));
+
+        $this->assertSame('abcdef', $pimple->get('test'));
     }
 }
