@@ -73,4 +73,13 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('abcdef', $pimple->get('test'));
     }
+
+    public function testExtensionWithNoFactory()
+    {
+        $pimple = new Container(array(
+            new SimplexServiceProviderWithExtension(),
+        ));
+
+        $this->assertSame('foodef', $pimple->get('extendNothing'));
+    }
 }

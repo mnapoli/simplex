@@ -20,6 +20,11 @@ class SimplexServiceProviderWithExtension implements ServiceProviderInterface
                 return $previous . 'def';
 
             },
+            'extendNothing' => function ($container, string $previous = 'foo') {
+
+                return $previous . 'def';
+
+            },
         );
     }
 }
