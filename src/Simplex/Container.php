@@ -356,7 +356,7 @@ class Container implements \ArrayAccess, ContainerInterface
                     });
                 } else {
                     $this[$key] = function (ContainerInterface $c) use ($callable) {
-                        return call_user_func($callable, $c, null);
+                        return call_user_func($callable, $c);
                     };
                 }
             }
