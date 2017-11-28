@@ -15,12 +15,12 @@ class SimplexServiceProviderWithExtension implements ServiceProviderInterface
     public function getExtensions()
     {
         return array(
-            'test' => function ($container, string $previous) {
+            'test' => function ($container, $previous) {
 
                 return $previous . 'def';
 
             },
-            'extendNothing' => function ($container, string $previous = 'foo') {
+            'extendNothing' => function ($container, $previous = 'foo') {
 
                 return $previous . 'def';
 

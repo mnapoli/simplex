@@ -10,7 +10,7 @@ class SimplexServiceProvider implements ServiceProviderInterface
     public function getFactories()
     {
         return array(
-            'param' => array(SimplexServiceProvider::class, 'getParam'),
+            'param' => array(__CLASS__, 'getParam'),
             'service' => function() {
                 return new Service();
             },
@@ -20,7 +20,7 @@ class SimplexServiceProvider implements ServiceProviderInterface
     public function getExtensions()
     {
         return array(
-            'previous' => array(SimplexServiceProvider::class, 'getPrevious'),
+            'previous' => array(__CLASS__, 'getPrevious'),
         );
     }
 
