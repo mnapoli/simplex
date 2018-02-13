@@ -147,8 +147,8 @@ that gets access to the object instance and the container.
 
 Simplex supports registering [cross-framework service providers](https://github.com/container-interop/service-provider).
 
-To register one, call the `register()` method and pass the service provider instance:
+To register service providers, pass an array of service providers as first constructor argument.
 
 ```php
-$container->register(new MyServiceProvider());
+$container = new \Simplex\Container([new MyServiceProvider()]);
 ```
