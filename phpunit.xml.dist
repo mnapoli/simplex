@@ -8,7 +8,12 @@
 >
     <testsuites>
         <testsuite name="Simplex Test Suite">
-            <directory>./src/Simplex/Tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory>./src/Simplex/</directory>
+        </whitelist>
+    </filter>
 </phpunit>

@@ -1,9 +1,8 @@
 <?php
 namespace Simplex\Tests\Fixtures;
 
-use Interop\Container\ContainerInterface;
-use Interop\Container\ServiceProvider;
 use Interop\Container\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
 
 class SimplexServiceProvider implements ServiceProviderInterface
 {

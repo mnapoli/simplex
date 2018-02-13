@@ -2,14 +2,14 @@
 
 namespace Simplex\Exception;
 
-use Interop\Container\Exception\NotFoundException;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * No entry was found in the container.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
-class EntryNotFound extends \Exception implements NotFoundException
+class EntryNotFound extends \Exception implements NotFoundExceptionInterface
 {
     public function __construct($id)
     {

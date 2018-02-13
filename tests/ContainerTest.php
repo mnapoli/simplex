@@ -185,6 +185,14 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($pimple->raw('foo'));
     }
 
+    public function testRawReturnsFactoryForAlreadyCreatedObject()
+    {
+        $pimple = new Container();
+        $pimple['service'] = $definition = function () { return 'foo'; };
+        $this->assertEquals('foo', $pimple->get('service'));
+        $this->assertSame($definition, $pimple->raw('service'));
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Identifier "foo" is not defined.

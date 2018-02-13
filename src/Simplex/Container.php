@@ -26,10 +26,10 @@
 
 namespace Simplex;
 
-use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
-use Interop\Container\Exception\NotFoundException;
 use Interop\Container\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Simplex\Exception\EntryNotFound;
 
 /**
@@ -78,8 +78,8 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @param string $id Identifier of the entry to look for.
      *
-     * @throws NotFoundException  No entry was found for this identifier.
-     * @throws ContainerException Error while retrieving the entry.
+     * @throws NotFoundExceptionInterface  No entry was found for this identifier.
+     * @throws ContainerExceptionInterface Error while retrieving the entry.
      *
      * @return mixed Entry.
      */
@@ -151,7 +151,7 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @return mixed The value of the parameter or an object
      *
-     * @throws NotFoundException if the identifier is not defined
+     * @throws NotFoundExceptionInterface if the identifier is not defined
      */
     public function offsetGet($id)
     {
