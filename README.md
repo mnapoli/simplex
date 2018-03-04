@@ -2,7 +2,7 @@
 
 # Simplex
 
-Simplex is a [Pimple 3](https://github.com/silexphp/Pimple) fork with full [container-interop](https://github.com/container-interop/container-interop) compliance and [cross-framework service-provider](https://github.com/container-interop/service-provider) support.
+Simplex is a [Pimple 3](https://github.com/silexphp/Pimple) fork with full [PSR-11](https://www.php-fig.org/psr/psr-11/) compliance and [cross-framework service-provider](https://github.com/container-interop/service-provider) support.
 
 Simplex is a small dependency injection container for PHP.
 
